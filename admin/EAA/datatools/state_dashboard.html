@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html>
+<!-- non framed -->
+<head>
+<title>State Dashboard</title>
+~[wc:commonscripts]
+<link href="/images/css/screen.css" rel="stylesheet" media="screen">
+<link href="/images/css/print.css" rel="stylesheet" media="print">
+</head>
+
+<body>
+
+~[wc:admin_header_css]<!-- breadcrumb start --><a href="/admin/home.html" target="_top">Start Page</a> &gt;State Dashboard<!-- breadcrumb end -->~[wc:admin_navigation_css]
+
+<div id = 'adminBulletinDialog' class = "box-round"><H2>State Dashboard</H2><p>This page will allow you to access useful information and tools to assist in the monitoring and cleaning of State reported data. </p>
+
+	<div class="tabs"> 
+		<ul> 
+			<li><a href="#tabDemographics">Demographics</a></li>
+                        
+		</ul> 
+
+<div class="box-round">
+		<div id="tabDemographics"> 
+
+<fieldset class = "inline" style = "width:500px;float;left;Display:inline-block"><legend>Missing or Invalid Required Contact Information - <a href = "/admin/EAA/datatools/state_missingcontact.html">Edit</a></legend>
+<table border="1" cellspacing="0" cellpadding="4" width="650">
+		<th class="bold">School Name</td>
+		<th class="bold">School Count</td>
+		</tr>
+~[tlist_sql;
+SELECT (CASE 
+WHEN GROUPING(SchoolName) = 1 THEN 'District'
+ELSE SchoolName END) as SchoolName, COUNT(SchoolName) as SchoolCount
+FROM(
+SELECT
+  SCH.Name as SchoolName
+, STU.DCID as DCID
+, STU.Student_Number as Student_Number
+, STU.Last_Name as Last_Name
+, STU.First_Name as First_Name
+, STU.Gender as Gender
+, STU.Grade_Level as Grade_Level
+FROM STUDENTS STU
+LEFT JOIN Schools SCH ON STU.Schoolid = SCH.School_Number
+WHERE STU.Enroll_Status = 0
+AND (STU.First_Name IS NULL OR STU.Last_Name IS NULL OR STU.Street IS NULL OR STU.City IS NULL OR STU.State IS NULL 
+     OR STU.Zip IS NULL OR (STU.Home_Phone IS NULL OR STU.Home_Phone = '000-000-0000') OR (STU.DOB IS NULL OR to_char(STU.DOB, 'yyyy') NOT BETWEEN to_char(SYSDATE, 'yyyy')-25 AND to_char(SYSDATE, 'yyyy')-4)  )
+~[if.is.a.school] 
+	AND	STU.Schoolid = ~(curschoolid)
+[else]
+        AND SCH.schoolgroup != '9'
+[/if])  sumquery
+~[if.is.a.school] 
+	GROUP BY SchoolName
+[else]
+        GROUP BY rollup(SchoolName)
+[/if]
+
+UNION ALL SELECT 'No Students Found', null FROM Students WHERE ROWNUM = 1 AND NOT EXISTS 
+(SELECT a.id FROM students a LEFT JOIN schools b ON a.schoolid = b.school_number
+WHERE a.enroll_status = 0 AND 
+(a.First_Name IS NULL 
+OR a.Last_Name IS NULL 
+OR a.Street IS NULL 
+OR a.City IS NULL 
+OR a.State IS NULL 
+OR a.Zip IS NULL 
+OR (a.Home_Phone IS NULL 
+    OR a.Home_Phone = '000-000-0000') 
+OR (a.DOB IS NULL 
+    OR to_char(a.DOB, 'yyyy') NOT BETWEEN to_char(SYSDATE, 'yyyy')-25 AND to_char(SYSDATE, 'yyyy')-4)
+)
+~[if.is.a.school] 
+	AND	a.Schoolid = ~(curschoolid)
+[else]
+        AND b.schoolgroup != '9'
+[/if]
+)
+
+
+;alternatecolor]
+<tr class="oddrow">
+	<td>~(SchoolName)</td>
+	<td>~(SchoolCount)</td>
+</tr>
+[/tlist_sql]
+</table>
+</fieldset> 
+
+
+<fieldset class = "inline" style = "width:500px;float;left;Display:inline-block"><legend>Missing Ethnicity - <a href = "/admin/EAA/datatools/state_missingethnicity.html">Edit</a></legend>
+<table border="1" cellspacing="0" cellpadding="4" width="650">
+		<th class="bold">School Name</td>
+		<th class="bold">School Count</td>
+		</tr>
+~[tlist_sql;
+SELECT (CASE WHEN GROUPING(SchoolName) = 1 THEN 'District'
+ELSE SchoolName END) as SchoolName, COUNT(SchoolName) as SchoolCount
+FROM(
+SELECT
+  SCH.Name as SchoolName
+FROM STUDENTS STU
+LEFT JOIN S_MI_STU_GC_X STX ON STU.DCID = STX.STUDENTSDCID
+LEFT JOIN Schools SCH ON STU.Schoolid = SCH.School_Number
+WHERE STU.Enroll_Status = 0
+AND ((STX.ethnicIndian
++ STX.ethnicAsian
++ STX.ethnicBlack
++ STX.ethnicPacific
++ STX.ethnicWhite
++ STX.ethnicHispanic) < 1
+OR (STX.ethnicIndian
++ STX.ethnicAsian
++ STX.ethnicBlack
++ STX.ethnicPacific
++ STX.ethnicWhite
++ STX.ethnicHispanic) is null)
+~[if.is.a.school] 
+	AND	STU.Schoolid = ~(curschoolid)
+[else]
+        AND SCH.schoolgroup != '9'
+[/if])  sumquery
+~[if.is.a.school] 
+	GROUP BY SchoolName
+[else]
+        GROUP BY rollup(SchoolName)
+[/if]
+UNION ALL SELECT 'No Students Found', null FROM Students WHERE ROWNUM = 1 AND NOT EXISTS 
+(SELECT a.id from students a LEFT JOIN S_MI_STU_GC_X STX ON a.DCID = STX.STUDENTSDCID 
+LEFT JOIN schools b ON a.schoolid = b.school_number where enroll_status = 0 
+AND ((STX.ethnicIndian
++ STX.ethnicAsian
++ STX.ethnicBlack
++ STX.ethnicPacific
++ STX.ethnicWhite
++ STX.ethnicHispanic) < 1
+OR (STX.ethnicIndian
++ STX.ethnicAsian
++ STX.ethnicBlack
++ STX.ethnicPacific
++ STX.ethnicWhite
++ STX.ethnicHispanic) is null)
+~[if.is.a.school] 
+	AND	a.Schoolid = ~(curschoolid)
+[else]
+        AND b.schoolgroup != '9'
+[/if])
+
+
+;alternatecolor]
+<tr class="oddrow">
+	<td>~(SchoolName)</td>
+	<td>~(SchoolCount)</td>
+</tr>
+[/tlist_sql]
+</table>
+</fieldset>
+
+<fieldset class = "inline" style = "width:500px;float;left;Display:inline-block"><legend>Missing Gender - <a href = "/admin/EAA/datatools/state_missinggender.html">Edit</a></legend>
+<table border="1" cellspacing="0" cellpadding="4" width="650">
+		<th class="bold">School Name</td>
+		<th class="bold">School Count</td>
+		</tr>
+~[tlist_sql;
+SELECT (CASE 
+WHEN GROUPING(SchoolName) = 1 THEN 'District'
+ELSE SchoolName END) as SchoolName, COUNT(SchoolName) as SchoolCount
+FROM(
+SELECT
+  SCH.Name as SchoolName
+, STU.DCID as DCID
+, STU.Student_Number as Student_Number
+, STU.Last_Name as Last_Name
+, STU.First_Name as First_Name
+, STU.Gender as Gender
+, STU.Grade_Level as Grade_Level
+FROM STUDENTS STU
+LEFT JOIN Schools SCH ON STU.Schoolid = SCH.School_Number
+WHERE STU.Enroll_Status = 0
+AND STU.Gender IS NULL
+~[if.is.a.school] 
+	AND	STU.Schoolid = ~(curschoolid)
+[else]
+        AND SCH.schoolgroup != '9'
+[/if])  sumquery
+~[if.is.a.school] 
+	GROUP BY SchoolName
+[else]
+        GROUP BY rollup(SchoolName)
+[/if]
+UNION ALL SELECT 'No Students Found', null FROM Students WHERE ROWNUM = 1 AND NOT EXISTS 
+(SELECT a.gender from students a LEFT JOIN schools b ON a.schoolid = b.school_number where a.gender is null and a.enroll_status = 0
+~[if.is.a.school] 
+	AND	a.Schoolid = ~(curschoolid)
+[else]
+        AND b.schoolgroup != '9'
+[/if])
+
+;alternatecolor]
+<tr class="oddrow">
+	<td>~(SchoolName)</td>
+	<td>~(SchoolCount)</td>
+</tr>
+[/tlist_sql]
+</table>
+</fieldset>
+</div>
+
+  
+<fieldset class = "inline" style = "width:500px;float;left;Display:inline-block"><legend>Missing State UIC Code - <a href = "/admin/EAA/datatools/state_missinguic.html">Edit</a></legend>
+<table border="1" cellspacing="0" cellpadding="4" width="650">
+		<th class="bold">School Name</td>
+		<th class="bold">School Count</td>
+		</tr>
+~[tlist_sql;
+SELECT (CASE 
+WHEN GROUPING(SchoolName) = 1 THEN 'District'
+ELSE SchoolName END) as SchoolName, COUNT(SchoolName) as SchoolCount
+FROM(
+SELECT
+  SCH.Name as SchoolName
+, STU.DCID as DCID
+, STU.Student_Number as Student_Number
+, STU.Last_Name as Last_Name
+, STU.First_Name as First_Name
+, STU.Gender as Gender
+, STU.Grade_Level as Grade_Level
+FROM STUDENTS STU
+LEFT JOIN Schools SCH ON STU.Schoolid = SCH.School_Number
+WHERE STU.Enroll_Status = 0
+AND STU.state_studentnumber IS NULL
+~[if.is.a.school] 
+	AND	STU.Schoolid = ~(curschoolid)
+[else]
+        AND SCH.schoolgroup != '9'
+[/if])  sumquery
+~[if.is.a.school] 
+	GROUP BY SchoolName
+[else]
+        GROUP BY rollup(SchoolName)
+[/if]
+UNION ALL SELECT 'No Students Found', null FROM Students WHERE ROWNUM = 1 AND NOT EXISTS 
+(SELECT a.state_studentnumber from students a LEFT JOIN schools b ON a.schoolid = b.school_number where a.state_studentnumber is null and a.enroll_status = 0
+~[if.is.a.school] 
+	AND	a.Schoolid = ~(curschoolid)
+[else]
+        AND b.schoolgroup != '9'
+[/if])
+
+;alternatecolor]
+<tr class="oddrow">
+	<td>~(SchoolName)</td>
+	<td>~(SchoolCount)</td>
+</tr>
+[/tlist_sql]
+</table>
+</fieldset>
+
+
+</div>  
+</div>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- Published by Douglas S. Mott, direct inquiries to (313)405-9544 -->

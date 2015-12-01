@@ -1,0 +1,143 @@
+<form action="/admin/EAA/datatools/state_missingethnicity.html?changesSaved=true" method="POST" onsubmit="return formValid('S');">
+<fieldset class="inline">
+	<legend>MSDS ethnic reporting by precedence</legend>
+	<div>
+    <label for="idPSEthnic" title="[Students]Ethnicity, String(20)">PowerSchool ethnic code value:</label>
+    <input type="text" id="idPSEthnic" title="[Students]Ethnicity, String(20)" disabled="disabled" size="30"  />
+    <input type="hidden" id="mePSEthnic" />
+    </div>
+
+<div>
+    <label for="idEthnicIndian" title="[Students.S_MI_STU_GC_X]ethnicIndian, String(4)">American Indian or Alaskan native:</label>
+    <select name="[Students.S_MI_STU_GC_X]ethnicIndian" id="idEthnicIndian" title="[Students.S_MI_STU_GC_X]ethnicIndian, String(4)" >
+		<option value="0">(0) Does not apply to this student</option>
+		<option value="1">(1) Primary racial/ethnic choice</option>
+		<option value="2">(2) Second racial/ethnic choice</option>
+		<option value="3">(3) Third racial/ethnic choice</option>
+		<option value="4">(4) Fourth racial/ethnic choice</option>
+		<option value="5">(5) Fifth racial/ethnic choice</option>
+		<option value="6">(6) Sixth racial/ethnic choice</option>
+	</select>	
+	<input type="hidden" id="meEthnicIndian" />
+    </div>
+	
+    <div>
+    <label for="idEthnicAsian" title="[Students.S_MI_STU_GC_X]ethnicAsian, String(4)">Asian:</label>
+    <select name="[Students.S_MI_STU_GC_X]ethnicAsian" id="idEthnicAsian" title="[Students.S_MI_STU_GC_X]ethnicAsian, String(4)" >
+		<option value="0">(0) Does not apply to this student</option>
+		<option value="1">(1) Primary racial/ethnic choice</option>
+		<option value="2">(2) Second racial/ethnic choice</option>
+		<option value="3">(3) Third racial/ethnic choice</option>
+		<option value="4">(4) Fourth racial/ethnic choice</option>
+		<option value="5">(5) Fifth racial/ethnic choice</option>
+		<option value="6">(6) Sixth racial/ethnic choice</option>
+	</select>	
+    <input type="hidden" id="meEthnicAsian" />
+    </div>
+	
+    <div>
+    <label for="idEthnicBlack" title="[Students.S_MI_STU_GC_X]ethnicBlack, String(4)">Black:</label>
+    <select name="[Students.S_MI_STU_GC_X]ethnicBlack" id="idEthnicBlack" title="[Students.S_MI_STU_GC_X]ethnicBlack, String(4)" >
+		<option value="0">(0) Does not apply to this student</option>
+		<option value="1">(1) Primary racial/ethnic choice</option>
+		<option value="2">(2) Second racial/ethnic choice</option>
+		<option value="3">(3) Third racial/ethnic choice</option>
+		<option value="4">(4) Fourth racial/ethnic choice</option>
+		<option value="5">(5) Fifth racial/ethnic choice</option>
+		<option value="6">(6) Sixth racial/ethnic choice</option>
+	</select>	
+    <input type="hidden" id="meEthnicBlack" />
+    </div>
+	
+    <div>
+    <label for="idEthnicPacific" title="[Students.S_MI_STU_GC_X]ethnicPacific, String(4)">Native Hawaiian or Pacific Islander:</label>
+    <select name="[Students.S_MI_STU_GC_X]ethnicPacific" id="idEthnicPacific" title="[Students.S_MI_STU_GC_X]ethnicPacific, String(4)" >
+		<option value="0">(0) Does not apply to this student</option>
+		<option value="1">(1) Primary racial/ethnic choice</option>
+		<option value="2">(2) Second racial/ethnic choice</option>
+		<option value="3">(3) Third racial/ethnic choice</option>
+		<option value="4">(4) Fourth racial/ethnic choice</option>
+		<option value="5">(5) Fifth racial/ethnic choice</option>
+		<option value="6">(6) Sixth racial/ethnic choice</option>
+	</select>	
+    <input type="hidden" id="meEthnicPacific" />
+    </div>
+	
+    <div>
+    <label for="idEthnicWhite" title="[Students.S_MI_STU_GC_X]ethnicWhite, String(4)">White:</label>
+    <select name="[Students.S_MI_STU_GC_X]ethnicWhite" id="idEthnicWhite" title="[Students.S_MI_STU_GC_X]ethnicWhite, String(4)" >
+		<option value="0">(0) Does not apply to this student</option>
+		<option value="1">(1) Primary racial/ethnic choice</option>
+		<option value="2">(2) Second racial/ethnic choice</option>
+		<option value="3">(3) Third racial/ethnic choice</option>
+		<option value="4">(4) Fourth racial/ethnic choice</option>
+		<option value="5">(5) Fifth racial/ethnic choice</option>
+		<option value="6">(6) Sixth racial/ethnic choice</option>
+	</select>	
+    <input type="hidden" id="meEthnicWhite" />
+    </div>
+	
+    <div>
+    <label for="idEthnicHispanic" title="[Students.S_MI_STU_GC_X]ethnicHispanic, String(4)">Hispanic or Latino:</label>
+    <select name="[Students.S_MI_STU_GC_X]ethnicHispanic" id="idEthnicHispanic" title="[Students.S_MI_STU_GC_X]ethnicHispanic, String(4)" >
+		<option value="0">(0) Does not apply to this student</option>
+		<option value="1">(1) Primary racial/ethnic choice</option>
+		<option value="2">(2) Second racial/ethnic choice</option>
+		<option value="3">(3) Third racial/ethnic choice</option>
+		<option value="4">(4) Fourth racial/ethnic choice</option>
+		<option value="5">(5) Fifth racial/ethnic choice</option>
+		<option value="6">(6) Sixth racial/ethnic choice</option>
+	</select>	
+    <input type="hidden" id="meEthnicHispanic" />
+    </div>
+	</fieldset>
+
+<div class="button-row"><input type="hidden" name="ac" value="prim">~[submitbutton]</div>
+
+</form>
+<script>
+$j('select[id*="idEthnic"]').addClass('ethnicSelection');
+            $j('select[id*="idEthnicWhite"]').closest('fieldset').append('<div class="hidden"><input id="fullEthnic" size="10"></div>');
+            $j('input#fullEthnic').val(
+                    $j('select[id*="idEthnic"]').map(function() {
+                        if (this.value == 1) {
+                            return this.value
+                        }
+                    }).get().join('')
+                );
+            $j('input#fullEthnic').addClass('required');
+			if ($j('input#fullEthnic').val().length === 0 ) {
+					$j('button[type="submit"]').addClass('disabled')
+			}
+            
+            $j('select[id*="idEthnic"]').change(function () {
+                $j('input#fullEthnic').val(
+                    $j('select[id*="idEthnic"]').map(function() {
+                        if (this.value == 1) {
+                            return this.value
+                        }
+                    }).get().join('')
+                );
+				if ($j('input#fullEthnic').val().length === 0 ) {
+					$j('button[type="submit"]').addClass('disabled')
+				} else {
+					$j('button[type="submit"]').removeClass('disabled')
+				}
+            });
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- Published by Douglas S. Mott, direct inquiries to (313)405-9544 -->

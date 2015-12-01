@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html>
+<!-- non framed -->
+<head>
+<title>EAA Custom Reports</title>
+~[wc:commonscripts]
+<link href="/images/css/screen.css" rel="stylesheet" media="screen">
+<link href="/images/css/print.css" rel="stylesheet" media="print">
+<style>
+table.linkDescList col:first-child {
+		width: 30%;
+	}
+</style>
+
+<script type="text/javascript">
+	function saveValuesMulti(eleFrom, eleTo)
+	{
+		var theList = "";
+
+		for (var i=0; i<eleFrom.options.length; i++)
+		{
+			if (eleFrom.options[i].selected && eleFrom.options[i].value != "")
+			{
+				theList = theList + eleFrom.options[i].value + ",";
+			}
+		}
+		eleTo.value = theList;
+	}
+
+	//Populates a list based on a hidden field
+	function loadValuesMulti(eleFrom, eleHidden)
+	{
+				var Arr;
+				Arr = eleHidden.value.split(",");
+				
+				if(eleHidden.value != "")
+				{  
+				for (var i=0; i<eleFrom.options.length; i++)
+				{
+							for(var j=0; j<Arr.length-1; j++)
+							{
+										if(eleFrom.options[i].value == Arr[j])
+										{
+													eleFrom.options[i].selected = true;
+										}
+							}
+				}
+				}
+				else
+				{
+							for (var i=0; i<eleFrom.options.length; i++)
+							{
+								eleFrom.options[i].selected = false;
+							}
+							eleFrom.options[0].selected = true;
+				}
+	}
+	
+	function RemoveComma() {
+	   var CurrentList = "";
+		CurrentList = "~[displaypref:eaaCustAdminGrp]";
+		CurrentList = CurrentList.replace(/,\s*$/, "");
+		document.getElementById("curlist").innerHTML = CurrentList;
+	}
+</script>
+
+<script type="text/javascript">
+
+function tml(){
+	var frm = document.getElementById('MaxLoad');
+	if (frm && frm.style.display=='none'){
+	
+		frm.style.display = 'block';}else{
+		frm.style.display = 'none';
+		
+		}
+}
+
+function livelistupdate(){
+	var ll = document.getElementById('livelist');
+	var ht = document.getElementById('selectedTeacher');
+	if(ll && ht) {
+		ht.value=ll.options[ll.selectedIndex].text;
+	}
+}
+
+
+function show(section) {
+	if(document.getElementById(section).style.display="none") {
+		document.getElementById(section).style.display="block";
+	}
+}
+
+window.onload = function () {
+	var vlivelist = document.getElementById('livelist');
+	if(vlivelist) {
+		vlivelist.onclick=livelistupdate;
+	}
+	
+	
+	var maxlink = document.getElementById('maxloadlink');
+	if(maxlink) {
+		maxlink.onclick=tml;
+	}
+}
+
+</script>
+</head>
+
+<body>
+~[wc:admin_header_css]<!-- breadcrumb start --><a href="/admin/home.html" target="_top">~[text:psx.html.admin_reports.runreports.start_page]</a> &gt; <a href="/admin/reports/home.html">~[text:psx.html.admin_reports.runreports.reports]</a> &gt; EAA Reports<!-- breadcrumb end -->~[wc:admin_navigation_css]
+
+<h1>EAA Reports</h1>
+
+<!-- start of content and bounding box -->
+
+<div class="tabs"> 
+	<ul> 
+		<li><a href="#tabAcademics">Academics</a></li>
+		<li><a href="#tabAttendance">Attendance & Enrollment</a></li>
+		<li><a href="#tabDiscipline">Discipline</a></li>
+		<li><a href="#tabState">State Reporting</a></li>
+		<li><a href="#tabReference">Reference Materials</a></li>
+		<li><a href="#tabWeeklyDashboard">Weekly Dashboard</a></li>
+		~[if.security.inrole=~[displaypref:eaaCustAdminGrp]]<li><a href="#tabSettings">Settings</a></li>[/if]
+	</ul> 
+
+	<div class="box-round">
+		<div id="tabAcademics"> 
+			<h2 class="toggle expanded">Student Grades</h2>
+				<table class="linkDescList">
+					<colgroup><col><col></colgroup>
+					<thead>
+						<th>Report</th>
+						<th>Description</th>
+					</thead>
+					<tbody>
+						<tr>
+							<td><a href="/admin/sqlReports4/params.html?frn=0068431&lrn=~(userfrn)" target="_blank">Section Grades by Student (from Current Gradebook)</a></td>
+							<td>Shows all student grades (from <b>PowerTeacher Gradebook</b>) for all student course enrollments on a particular date. Select the StoreCode <em>(Q1, S2, etc.)</em> you wish to lookup grades for.</td>
+						</tr>
+						<tr>
+							<td><a href="/admin/sqlReports4/params.html?frn=00610025&lrn=~(userfrn)" target="_blank">Section Grades by Student (from Historical/Stored Grades)</a></td>
+							<td>Shows all student grades (from <b>historical/stored grades</b>) for all student course enrollments on a particular date. Select the StoreCode <em>(Q1, S2, etc.)</em> you wish to lookup grades for.</td>
+						</tr>
+						<tr>
+							<td><a href="/admin/sqlReports4/params.html?frn=00610275&lrn=~(userfrn)" target="_blank">Section Grades by Student (Compare Current Gradebook vs. Historical/Stored Grades)</a></td>
+							<td>Shows all student grades (from both <b>PowerTeacher Gradebook</b> <em>and</em> <b>historical/stored grades</b>) for all student course enrollments on a particular date. Use to identify stored grade issues and find grades teachers have changed after storing. Select the StoreCode <em>(Q1, S2, etc.)</em> you wish to lookup grades for.</td>
+						</tr>
+						<tr>
+							<td><a href="/admin/sqlReports4/params.html?frn=00610248&lrn=~(userfrn)" target="_blank">Grade Distribution by School and Credit Type (from Historical/Stored Grades)</a></td>
+							<td>Shows the percentage of final grades from <b>historical/stored grades</b> (letter grade, numberical grade, etc.) for all student course enrollments on a particular date. Select the StoreCode <em>(Q1, S2, etc.)</em> you wish to lookup grades for.</td>
+						</tr>
+					</tbody>
+				</table>
+				
+			<h2 class="toggle expanded">Grade Auditing</h2>
+				<table class="linkDescList">
+					<colgroup><col><col></colgroup>
+					<thead>
+						<th>Report</th>
+						<th>Description</th>
+					</thead>
+					<tbody>
+						<tr>
+							<td><a href="/admin/sqlReports4/params.html?frn=0068459&lrn=~(userfrn)" target="_blank">PowerTeacher Gradebook Audit</a></td>
+							<td>The number of assignments entered on a weekly basis by section, and the last date that grades were updated..</td>
+						</tr>
+						<tr>
+							<td><a href="/admin/sqlReports4/params.html?frn=0068487&lrn=~(userfrn)" target="_blank">Section Readiness Report</a></td>
+							<td>Used to verify teachers have finalized their gradebooks. Can be used without PowerTeacher access.</td>
+						</tr>
+						<tr>
+							<td><a href="/admin/sqlReports4/params.html?frn=0068627&lrn=~(userfrn)" target="_blank">Section Readiness Report (Specific Grade Levels)</a></td>
+							<td>Same as <em>Section Readiness Report</em>, but only includes classes that have specific grade levels enrolled into them. <em>(E.g., only 12th grade students when storing early for graduation purposes.)</em> Can be used without PowerTeacher access.</td>
+						</tr>
+					</tbody>
+				</table>
+			
+		</div>
+
+		<div id="tabAttendance"> 
+			<h2 class="toggle expanded">School & District Attendance Rates</h2>
+				<table class="linkDescList">
+					<colgroup><col><col></colgroup>
+					<thead>
+						<th>Report</th>
+						<th>Description</th>
+					</thead>
+					<tbody>
+						<tr>
+							<td><a href="/admin/sqlReports4/params.html?frn=0069390&lrn=~(userfrn)" target="_blank">Attendance Rate by School, Grade, Day</a></td>
+							<td>Daily attendance rates, by school and grade. Use this for ADA and ADM purposes.</td>
+						</tr>
+						<tr>
+							<td><a href="/admin/sqlReports4/params.html?frn=00610040&lrn=~(userfrn)" target="_blank">Attendance Rate by School, Day</a></td>
+							<td>Daily attendance rates, by school. Use this for ADA and ADM purposes.</td>
+						</tr>
+						<tr>
+							<td><a href="/admin/sqlReports4/params.html?frn=0069388&lrn=~(userfrn)" target="_blank">Attendance Rate for District, Day</a></td>
+							<td>Daily attendance rates for the district. Use this for ADA and ADM purposes.</td>
+						</tr>
+						<tr>
+							<td><a href="/admin/sqlReports4/params.html?frn=00610041&lrn=~(userfrn)" target="_blank">Attendance Rate by School, Day (Chart)</a></td>
+							<td>Daily attendance rates, by school. Use this for ADA and ADM purposes.</td>
+						</tr>
+						<tr>
+							<td><a href="/admin/sqlReports4/params.html?frn=0069389&lrn=~(userfrn)" target="_blank">Attendance Rate for District, Day (Chart)</a></td>
+							<td>Daily attendance rates for the district. Use this for ADA and ADM purposes.</td>
+						</tr>
+					</tbody>
+				</table>
+				
+			<h2 class="toggle expanded">Student-Level Attendance</h2>
+				<table class="linkDescList">
+					<colgroup><col><col></colgroup>
+					<thead>
+						<th>Report</th>
+						<th>Description</th>
+					</thead>
+					<tbody>
+						<tr>
+							<td><a href="/admin/sqlReports4/params.html?frn=0069992&lrn=~(userfrn)" target="_blank">Attendance Rate by Student (Each School Enrollment Separate)</a></td>
+							<td>List of students enrolled in a date range and their overall attendance rates. Each enrollment at school is separate (Reenrollments show in separate rows). Use this for ADA and ADM purposes.</td>
+						</tr>
+						<tr>
+							<td><a href="/admin/sqlReports4/params.html?frn=00610066&lrn=~(userfrn)" target="_blank">Attendance Rate by Student (School Enrollment Rollup)</a></td>
+							<td>List of students enrolled in a date range and their overall attendance rates. All school enrollments (including reenrollments) are combined. Use this for ADA and ADM purposes.</td>
+						</tr>
+						<tr>
+							<td><a href="/admin/sqlReports4/params.html?frn=0069080&lrn=~(userfrn)" target="_blank">Attendance Rate by Student Section Enrollment</a></td>
+							<td>List of student-section enrollments within a a date range and their overall attendance rates.</td>
+						</tr>
+						<tr>
+							<td><a href="/admin/reports_engine/report_w_param.html?ac=reports_get_using_ID;repo_ID=PSPRE_ConsecAbsences" target="_blank">Consecutive Absence Report</a></td>
+							<td>A PowerSchool report listing students and sections with consecutive student attendance markings of any desired attendance code. <em>(E.g., A or T.)</em><br /><b><u>Note:</u> <em>Do not use this report for a period longer than one month.</em></b></td>
+						</tr>
+					</tbody>
+				</table>
+				
+			<h2 class="toggle expanded">Membership & School Enrollment Reports</h2>
+				<table class="linkDescList">
+					<colgroup><col><col></colgroup>
+					<thead>
+						<th>Report</th>
+						<th>Description</th>
+					</thead>
+					<tbody>
+						<tr>
+							<td><a href="/admin/sqlReports4/params.html?frn=0069795&lrn=~(userfrn)" target="_blank">Exit Code Distribution</a></td>
+							<td>Frequency of exit code usage by school.</td>
+						</tr>
+							<td><a href="/admin/sqlReports4/params.html?frn=0069794&lrn=~(userfrn)" target="_blank">Number of New vs. Returning Enrolled Students</a></td>
+							<td>Out of students that have been enrolled in school during a date range, display the number of returning students vs. new students. Returning students must have been active at school within a specific date range to count as returning.</td>
+						</tr>
+						<tr>
+							<td><a href="/admin/sqlReports4/params.html?frn=0069791&lrn=~(userfrn)" target="_blank">Number of Validated Enrollments for 1, 2, 3, and 4 Periods and Previous 4 Days</a></td>
+							<td>Number of students that are present for either 1, 2, 3, or 4 periods on a day, and the number of validated enrollments on previous 4 days. A validated enrollment requires 1 or more periods present for K-8 and 2 or more periods present for 9-12 (on a single day).</td>
+						</tr>
+						<tr>
+							<td><a href="/admin/sqlReports4/params.html?frn=0069801&lrn=~(userfrn)" target="_blank">Number of Students Meeting Validated Enrollment Criteria for 1, 2, 3, 4, and 5+ Days</a></td>
+							<td>Number of students that meet the Validated Enrollment criteria for 1, 2, 3, 4, and 5 days within a date range. A validated enrollment requires 1 or more periods present for K-8 and 2 or more periods present for 9-12 (on a single day).</td>
+						</tr>
+						<tr>
+							<td><a href="/admin/sqlReports4/params.html?frn=0069676&lrn=~(userfrn)" target="_blank">Number of Validated Enrollments by Grade & School</a></td>
+							<td>Number of students that meet the Validated Enrollment criteria, by grade and school. A validated enrollment requires 1 or more periods present for K-8 and 2 or more periods present for 9-12 (on a single day).</td>
+						</tr>
+						<tr>
+							<td><a href="/admin/sqlReports4/params.html?frn=0069779&lrn=~(userfrn)" target="_blank">Validated Enrollment Student List</a></td>
+							<td>List of students that were enrolled on a particular date. Search for students using the percentage of days the student meet the Validated Enrollment criteria. . A validated enrollment requires 1 or more periods present for K-8 and 2 or more periods present for 9-12 (on a single day).</td>
+						</tr>
+					</tbody>
+				</table>
+				
+			<h2 class="toggle expanded">Data Validation</h2>
+				<table class="linkDescList">
+					<colgroup><col><col></colgroup>
+					<thead>
+						<th>Report</th>
+						<th>Description</th>
+					</thead>
+					<tbody>
+						<tr>
+							<td><a href="/admin/sqlReports4/params.html?frn=0068716&lrn=~(userfrn)" target="_blank">Blank Attendance Report</a></td>
+							<td>List of sections that have missing attendance within a date range.</td>
+						</tr>
+						<tr>
+							<td><a href="/admin/sqlReports4/params.html?frn=0069072&lrn=~(userfrn)" target="_blank">Modified Attendance Records</a></td>
+							<td>List of attendance records from a date range that have been changed/overwritten by any user.</td>
+						</tr>
+						<tr>
+							<td><a href="/admin/tech/checkenrollment.html" target="_blank">School Enrollment Issues</a></td>
+							<td>A report of possible school enrollment <em>(Transfer Info)</em> errors.</td>
+						</tr>
+						<tr>
+							<td><a href="/admin/tech/checkclassdates.html" target="_blank">Section/Course Enrollment Issues</a></td>
+							<td>A report of possible section/course enrollment <em>(All Enrollments, CC)</em> errors.</td>
+						</tr>
+						<tr>
+							<td><a href="/admin/sqlReports4/params.html?frn=0068599&lrn=~(userfrn)" target="_blank">Students' First and Last Day Present</a></td>
+							<td>List of students enrolled in a date range and shows their first and last day present. Useful for finding students with enrollment dates that require corrections.</td>
+						</tr>
+					</tbody>
+				</table>
+		</div>
+		
+		<div id="tabDiscipline"> 
+			<h2 class="toggle expanded">Discipline Listings</h2>
+				<table class="linkDescList">
+					<colgroup><col><col></colgroup>
+					<thead>
+						<th>Report</th>
+						<th>Description</th>
+					</thead>
+					<tbody>
+						<tr>
+							<td><a href="/admin/sqlReports4/params.html?frn=0068730&lrn=~(userfrn)" target="_blank">Log Entries Expanded (with Suspension Information)</a></td>
+							<td>List of log entries occurring within a date range. Includes additional information, such as OSS information.</td>
+						</tr>
+					</tbody>
+				</table>
+				
+			<h2 class="toggle expanded">Consequence Analysis</h2>
+				<table class="linkDescList">
+					<colgroup><col><col></colgroup>
+					<thead>
+						<th>Report</th>
+						<th>Description</th>
+					</thead>
+					<tbody>
+						<tr>
+							<td><a href="/admin/sqlReports4/params.html?frn=00610067&lrn=~(userfrn)" target="_blank">Distribution of Log Entries by Consequence and Student</a></td>
+							<td>Out of all log entries by school, distribution by Log Entry Discipline Consequence.</td>
+						</tr>
+						<tr>
+							<td><a href="/admin/sqlReports4/params.html?frn=0067995&lrn=~(userfrn)" target="_blank">Distribution of Log Entries by Consequence and School</a></td>
+							<td>Out of all log entries by school, distribution by Log Entry Discipline Consequence.</td>
+						</tr>
+						<tr>
+							<td><a href="/admin/sqlReports4/params.html?frn=0067997&lrn=~(userfrn)" target="_blank">Distribution of Log Entries by Consequence, School, and Date (MM/DD/YYYY)</a></td>
+							<td>Out of all log entries by school, distribution by Log Entry Discipline Consequence and date.</td>
+						</tr>
+						<tr>
+							<td><a href="/admin/sqlReports4/params.html?frn=0067998&lrn=~(userfrn)" target="_blank">Distribution of Log Entries by Consequence, School, and Month (YYYY/MM)</a></td>
+							<td>Out of all log entries by school, distribution by Log Entry Discipline Consequence and month.</td>
+						</tr>
+					</tbody>
+				</table>
+				
+			<h2 class="toggle expanded">Suspension Rates</h2>
+				<table class="linkDescList">
+					<colgroup><col><col></colgroup>
+					<thead>
+						<th>Report</th>
+						<th>Description</th>
+					</thead>
+					<tbody>
+						<tr>
+							<td><a href="/admin/sqlReports4/params.html?frn=00610002&lrn=~(userfrn)" target="_blank">Suspension Rate Across Multiple Groups</a></td>
+							<td>Count of discipline data, separated by multiple groups (ethnicity, gender, grade, special program).</td>
+						</tr>
+						<tr>
+							<td><a href="/admin/sqlReports4/params.html?frn=00610013&lrn=~(userfrn)" target="_blank">Rate of Out of School Suspension by Ethnicity (CHART)</a></td>
+							<td>Rate of discipline log entries, expulsions, number of suspensions, and number of suspended students per 100 students enrolled.</td>
+						</tr>
+						<tr>
+							<td><a href="/admin/sqlReports4/params.html?frn=00610011&lrn=~(userfrn)" target="_blank">Rate of Out of School Suspension by Gender (CHART)</a></td>
+							<td>Rate of discipline log entries, expulsions, number of suspensions, and number of suspended students per 100 students enrolled.</td>
+						</tr>
+						<tr>
+							<td><a href="/admin/sqlReports4/params.html?frn=00610010&lrn=~(userfrn)" target="_blank">Rate of Out of School Suspension by Grade (CHART)</a></td>
+							<td>Rate of discipline log entries, expulsions, number of suspensions, and number of suspended students per 100 students enrolled.</td>
+						</tr>
+						<tr>
+							<td><a href="/admin/sqlReports4/params.html?frn=00610051&lrn=~(userfrn)" target="_blank">Rate of Out of School Suspension by Grade, Gender (CHART)</a></td>
+							<td>Rate of discipline log entries, expulsions, number of suspensions, and number of suspended students per 100 students enrolled.</td>
+						</tr>
+						<tr>
+							<td><a href="/admin/sqlReports4/params.html?frn=00610009&lrn=~(userfrn)" target="_blank">Rate of Out of School Suspension by School (CHART)</a></td>
+							<td>Rate of discipline log entries, expulsions, number of suspensions, and number of suspended students per 100 students enrolled.</td>
+						</tr>
+						<tr>
+							<td><a href="/admin/sqlReports4/params.html?frn=00610012&lrn=~(userfrn)" target="_blank">Rate of Out of School Suspension by Special Program (CHART)</a></td>
+							<td>Rate of discipline log entries, expulsions, number of suspensions, and number of suspended students per 100 students enrolled.</td>
+						</tr>
+						<tr>
+							<td><a href="/admin/sqlReports4/params.html?frn=00610045&lrn=~(userfrn)" target="_blank">Rate of Out of School Suspension by Multiple <em>(Above)</em> Groups (CHART)</a></td>
+							<td>Rate of discipline log entries, expulsions, number of suspensions, and number of suspended students per 100 students enrolled.</td>
+						</tr>
+					</tbody>
+				</table>
+		</div>
+		
+		<div id="tabState"> 
+			<h2 class="toggle expanded">Data Validation</h2>
+				<table class="linkDescList">
+					<colgroup><col><col></colgroup>
+					<thead>
+						<th>Report</th>
+						<th>Description</th>
+					</thead>
+					<tbody>
+						<tr>
+							<td><a href="/admin/eaa/datatools/state_dashboard.html" target="_blank">State Reporting Data Validation Dashboard</a></td>
+							<td>Overview and management of current student data validation issues.</td>
+						</tr>
+						<tr>
+							<td><a href="/admin/EAA/datatools/state_missingethnicity.html" target="_blank">Missing Ethnicity</a></td>
+							<td>Detailed list of students with missing ethnicity details.</td>
+						</tr>
+					</tbody>
+				</table>
+				
+			<h2 class="toggle expanded">Count Day</h2>
+				<table class="linkDescList">
+					<colgroup><col><col></colgroup>
+					<thead>
+						<th>Report</th>
+						<th>Description</th>
+					</thead>
+					<tbody>
+						<tr>
+							<td><a href="/admin/sqlReports4/params.html?frn=0069889&lrn=~(userfrn)" target="_blank">FTE Calculations (by Student)</a></td>
+							<td>Detailed student-level FTE calculations for Count Day attendance tracking.</td>
+						</tr>
+						<tr>
+							<td><a href="/admin/reports_engine/report_w_param.html?ac=reports_get_using_ID;repo_ID=PSPRE_CLASS_AUDIT" target="_blank">Class Attendance Audit <em>(Teacher Attendance Verification)</em></a></td>
+							<td>Signed section attendance for signed verification by teacher.</td>
+						</tr>
+					</tbody>
+				</table>
+		</div>
+		
+		<div id="tabReference">
+			<h2 class="toggle expanded">PowerSchool User Guides</h2>
+				<table class="linkDescList">
+					<colgroup><col><col></colgroup>
+					<thead>
+						<th>Document</th>
+						<th>Description</th>
+					</thead>
+					<tbody>
+						<tr>
+							<td><a href="http://eaadatateam.com/wp-content/uploads/2015/11/04-19-page/PS01-BasicSkills.pdf" target="_blank">Basic Skills</a></td>
+							<td>Documentation on accessing PowerSchool, searching for students, and basic student functions.</td>
+						</tr>
+						<tr>
+							<td><a href="http://eaadatateam.com/wp-content/uploads/2015/11/04-19-page/PS02-Students.pdf" target="_blank">Working with Students</a></td>
+							<td>Documentation on working with individual students, including view information, managing academic history, discipline, scheduling, and more.</td>
+						</tr>
+						<tr>
+							<td><a href="http://eaadatateam.com/wp-content/uploads/2015/11/04-19-page/PS04-Parents.pdf" target="_blank">Working with Parents</a></td>
+							<td>Documentation on working with parent accounts and managing the Parent Portal.</td>
+						</tr>
+						<tr>
+							<td><a href="http://eaadatateam.com/wp-content/uploads/2015/11/04-19-page/PS05-Data.pdf" target="_blank">Working with Data</a></td>
+							<td>Documentation on accessing data and running reports in PowerSchool.</td>
+						</tr>
+					</tbody>
+				</table>
+				
+			<h2 class="toggle expanded">Additional Resources</h2>
+				<table class="linkDescList">
+					<colgroup><col><col></colgroup>
+					<thead>
+						<th>Resource</th>
+						<th>Description</th>
+					</thead>
+					<tbody>
+						<tr>
+							<td><a href="https://powersource.pearsonschoolsystems.com/" target="_blank">PowerSource</a></td>
+							<td>PowerSchool support website. Online trainings, PowerSchool documentation, version updates, and all other PowerSchool proprietary resources.</td>
+						</tr>
+					</tbody>
+				</table>
+		</div>
+		
+		<div id="tabWeeklyDashboard"> 
+			<h2 class="toggle expanded">Weekly Dashboard</h2>
+				<table class="linkDescList">
+					<colgroup><col><col></colgroup>
+					<thead>
+						<th>Report</th>
+						<th>Description</th>
+					</thead>
+					<tbody>
+						<tr>
+							<td><a href="/admin/sqlReports4/params.html?frn=0069743&lrn=~(userfrn)" target="_blank">01 - Weekly Dashboard Attendance By School</a></td>
+							<td>Weekly attendance rate by school.</td>
+						</tr>
+						<tr>
+							<td><a href="/admin/sqlReports4/params.html?frn=0069744&lrn=~(userfrn)" target="_blank">02 - Weekly Dashboard Attendance By School and Day</a></td>
+							<td>Weekly attendance rate by school and day.</td>
+						</tr>
+						<tr>
+							<td><a href="/admin/sqlReports4/params.html?frn=0069478&lrn=~(userfrn)" target="_blank">03 - Weekly Dashboard Attendance By School, Day, and Grade</a></td>
+							<td>Weekly attendance rate by school, day, and grade.</td>
+						</tr>
+						<tr>
+							<td><a href="/admin/sqlReports4/params.html?frn=0069485&lrn=~(userfrn)" target="_blank">04a - New Duplicate Students (Last 7 Days)</a></td>
+							<td>Duplicate student list created within past 7 days.</td>
+						</tr>
+						<tr>
+							<td><a href="/admin/sqlReports4/params.html?frn=0069898&lrn=~(userfrn)" target="_blank">04b - New Duplicate Students (Since Custom Date)</a></td>
+							<td>Duplicate student list created within a custom date range.</td>
+						</tr>
+						<tr>
+							<td><a href="/admin/sqlReports4/params.html?frn=0069850&lrn=~(userfrn)" target="_blank">05a - Discipline Suspensions</a></td>
+							<td>Suspension rate within a given date range.</td>
+						</tr>
+						<tr>
+							<td><a href="/admin/sqlReports4/params.html?frn=0069983&lrn=~(userfrn)" target="_blank">05b - Discipline Suspensions</a></td>
+							<td>Suspension rate within a given date range.</td>
+						</tr>
+						<tr>
+							<td><a href="/admin/sqlReports4/params.html?frn=0069894&lrn=~(userfrn)" target="_blank">06 - Student Entry and Exits</a></td>
+							<td>List of student entrances and exits within a given date range.</td>
+						</tr>
+						<tr>
+							<td><a href="/admin/sqlReports4/params.html?frn=0069989&lrn=~(userfrn)" target="_blank">07 - Chronically Absent</a></td>
+							<td>List of student meeting the chronically absent threshold of 10 or more absences.</td>
+						</tr>
+						<tr>
+							<td><a href="/admin/sqlReports4/params.html?frn=00610044&lrn=~(userfrn)" target="_blank">08 - Days in Session</a></td>
+							<td>Number of in-session days by school.</td>
+						</tr>
+						<tr>
+							<td><a href="/admin/sqlReports4/params.html?frn=0069676&lrn=~(userfrn)" target="_blank">09a - Verified Enrollments by School, Grade Condensed (Date Range)</a></td>
+							<td>Number of students at each school, by grade.</td>
+						</tr>
+						<tr>
+							<td><a href="/admin/sqlReports4/params.html?frn=00610056&lrn=~(userfrn)" target="_blank">09b - Verified Enrollments by School, Grade Condensed (n Days)</a></td>
+							<td>Number of students at each school, by grade.</td>
+						</tr>
+					</tbody>
+				</table>
+		</div>
+		~[if.security.inrole=~[displaypref:eaaCustAdminGrp]]
+		<div id="tabSettings"> 
+			<h2 class="toggle expanded">Settings</h2>
+				<form name="form1" action="home.html" method="POST">
+					<table class="linkDescList">
+						<tbody>
+							<tr>
+								<td><b>Access to Settings, Weekly Dashboard</b><br>Use CTRL/OPT to make multiple selections.<br><br><b>Current Preferred Admin Groups:</b><br><div id="curlist"></div></td>
+								<td colspan="2">
+									<select name="[pref]eaaCustAdminGrp" id="multi01" onChange="saveValuesMulti(this,document.getElementById('value01'))" MULTIPLE size="10" style="width:220px">
+									~[tlist_sql;select '<option value="'||id||'">'||name from gen where upper(cat)='GROUPS' order by id]~(SelectOpt;t)[/tlist_sql]
+									</select>
+									<input type="hidden" name="[pref]eaaCustAdminGrp" value="" id="value01">
+								</td>
+							</tr>
+							<script type="text/javascript">		loadValuesMulti(document.getElementById('multi01'),document.getElementById('value01'));
+							</script>
+						</tbody>
+					</table>
+					
+					<!-- start button row -->
+					<div class="button-row">
+						<input type="hidden" name="ac" value="prim">~[submitbutton]
+					</div>
+				</form>
+		</div>
+		[/if]
+	</div>
+</div>
+<br>
+<!-- end of content of bounding box -->
+
+~[wc:admin_footer_css]
+
+</body>
+</html><!-- non framed -->
