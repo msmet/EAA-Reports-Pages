@@ -1,0 +1,5 @@
+<!-- Start Link - EAA Reports Created by Michael Smet - v0.1 10/14/2015 -->
+<script>
+$j('ul#left_nav_report').prepend('<li><a href="/admin/EAA/home.html">EAA Reports</a></li>');
+</script>
+<!-- End Link - EAA Reports Created by Michael Smet - v0.1 10/14/2015 -->
