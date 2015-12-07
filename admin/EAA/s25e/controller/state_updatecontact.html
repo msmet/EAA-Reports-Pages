@@ -1,0 +1,102 @@
+<form action="/admin/EAA/datatools/state_missingcontact.html?changesSaved=true" method="POST" onsubmit="return formValid('S');">
+<fieldset class="inline">
+	<legend>PowerSchool Contact Information</legend>
+
+
+
+<!-- Start of shaded content table and bounding box -->
+<div class="box-round">
+
+<table border="0" cellspacing="0" cellpadding="4" class="linkDescList">
+<colgroup><col style="width:20%"><col></colgroup>
+
+<tr>
+    <td class="bold">~[text:psx.html.admin_students.generaldemographics.name]&nbsp;~[text:psx.html.admin_students.generaldemographics.last_first_mi]</td>
+    <td>
+        <input type="text" name="[01]last_name" value="" size="25" maxlength="50" id="lastName">,
+        <input type="text" name="[01]first_name" value="" size="25" maxlength="50" id="firstName">
+        <input type="text" name="[01]middle_name" value="" size="15" maxlength="30" id="middleName">
+    </td>
+</tr>
+
+<tr class="headerrow">
+    <td colspan="2" class="bold">~[text:psx.html.admin_students.generaldemographics.home_address]</td>
+</tr>
+<tr>
+    <td class="subhead">~[text:psx.html.admin_students.generaldemographics.street_aptsuite]</td>
+    <td>
+        <input type="text" name="[01]street" size="45" id="pstreet" value="">
+        <input type="text" name="" value="" size="10" id="papt">
+    </td>
+</tr>
+<tr>
+    <td class="subhead">~[text:psx.html.admin_students.generaldemographics.city_state_zip]</td>
+    <td>
+        <input type="text" name="[01]city" value="" size="30" id="pcity">
+        <input type="text" name="[01]state" value="" size="2" id="pstate">
+        <input type="text" name="[01]zip" value="" size="10" id="pzip">
+
+        <input type="hidden" name="orig_street" value="~([01]street)" id="orig_pstreet">
+        <input type="hidden" name="orig_city" value="~([01]city)" id="orig_pcity">
+        <input type="hidden" name="orig_state" value="~([01]state)" id="orig_pstate">
+        <input type="hidden" name="orig_zip" value="~([01]zip)" id="orig_pzip">
+    </td>
+
+</tr>
+
+<tr>
+    <td class="subhead">~[text:psx.html.admin_students.generaldemographics.street_aptsuite1]</td>
+    <td>
+        <input type="text" name="[01]mailing_street" value="" size="45" id="mstreet">
+        <input type="text" name="" value="" size="10" id="mapt">
+    </td>
+</tr>
+
+<tr>
+    <td class="bold">~[text:psx.html.admin_students.generaldemographics.home_phone]</td>
+    <td><input type="text" id="fieldHomePhone" name="[01]home_phone" value="" size="17"></td>
+</tr>
+<tr>
+    <td class="bold">~[text:psx.html.admin_students.generaldemographics.age]</td>
+    <td id="studentAge">~(age)</td>
+</tr>
+
+<tr>
+    <td class="bold">~[text:psx.html.admin_students.generaldemographics.dob]</td>
+    <td><input type="text" id="fieldDOB" name="[01]dob" value="" size="11"></td>
+</tr>
+
+
+
+
+
+</table>
+
+</div>
+
+
+
+
+
+
+
+
+</fieldset>
+
+<div class="button-row"><input type="hidden" name="ac" value="prim">~[submitbutton]</div>
+
+</form>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- Published by Douglas S. Mott, direct inquiries to (313)405-9544 -->

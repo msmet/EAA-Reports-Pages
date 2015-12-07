@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html>
+<!-- non framed -->
+<head>
+<title>Missing State UIC Code    </title>
+~[wc:commonscripts]
+<link href="/images/css/screen.css" rel="stylesheet" media="screen">
+<link href="/images/css/print.css" rel="stylesheet" media="print">
+</head>
+
+<body>
+
+~[wc:admin_header_css]<!-- breadcrumb start --><a href="/admin/home.html" target="_top">Start Page</a> &gt;<a href="/admin/EAA/datatools/state_dashboard.html">State Dashboard</a> &gt;Missing State UIC Code<!-- breadcrumb end -->~[wc:admin_navigation_css]
+
+<div id = 'adminBulletinDialog' class = "box-round"><H2>Missing State UIC Code</H2><p>This page displays all students that are currently missing the State UIC Code field. This information is required for State Reporting. </p>
+
+<fieldset class = "inline" style = "width:500px;float;left;Display:inline-block"><legend>Totals By Building</legend>
+<table border="1" cellspacing="0" cellpadding="4" width="650">
+		<th class="bold">School Name</td>
+		<th class="bold">School Count</td>
+		</tr>
+~[tlist_sql;
+SELECT (CASE 
+WHEN GROUPING(SchoolName) = 1 THEN 'District'
+ELSE SchoolName END) as SchoolName, COUNT(SchoolName) as SchoolCount
+FROM(
+SELECT
+  SCH.Name as SchoolName
+, STU.DCID as DCID
+, STU.Student_Number as Student_Number
+, STU.Last_Name as Last_Name
+, STU.First_Name as First_Name
+, STU.Gender as Gender
+, STU.Grade_Level as Grade_Level
+FROM STUDENTS STU
+LEFT JOIN Schools SCH ON STU.Schoolid = SCH.School_Number
+WHERE STU.Enroll_Status = 0
+AND STU.state_studentnumber IS NULL
+~[if.is.a.school] 
+	AND	STU.Schoolid = ~(curschoolid)
+[else]
+        AND SCH.schoolgroup != '9'
+[/if])  sumquery
+~[if.is.a.school] 
+	GROUP BY SchoolName
+[else]
+        GROUP BY rollup(SchoolName)
+[/if]
+UNION ALL SELECT 'No Students Found', null FROM Students WHERE ROWNUM = 1 AND NOT EXISTS 
+(SELECT a.state_studentnumber from students a LEFT JOIN schools b ON a.schoolid = b.school_number where a.state_studentnumber is null and a.enroll_status = 0
+~[if.is.a.school] 
+	AND	a.Schoolid = ~(curschoolid)
+[else]
+        AND b.schoolgroup != '9'
+[/if])
+
+;alternatecolor]
+<tr class="oddrow">
+	<td>~(SchoolName)</td>
+	<td>~(SchoolCount)</td>
+</tr>
+[/tlist_sql]
+</table>
+</fieldset>
+
+<fieldset class = "inline" style = "width:500px;float;right;Display:inline-block"><legend>Totals By Grade Level</legend>
+<table border="1" cellspacing="0" cellpadding="4" width="650">
+		<th class="bold">Grade Level</td>
+		<th class="bold">Grade Count</td>
+		</tr>
+~[tlist_sql;
+SELECT Grade_Level as Grade_Level, COUNT(Grade_Level) as GradeCount
+FROM(
+SELECT
+  SCH.Name as SchoolName
+, STU.DCID as DCID
+, STU.Student_Number as Student_Number
+, STU.Last_Name as Last_Name
+, STU.First_Name as First_Name
+, STU.Gender as Gender
+, STU.Grade_Level as Grade_Level
+FROM STUDENTS STU
+LEFT JOIN Schools SCH ON STU.Schoolid = SCH.School_Number
+WHERE STU.Enroll_Status = 0
+AND STU.state_studentnumber IS NULL
+
+~[if.is.a.school] 
+	AND	STU.Schoolid = ~(curschoolid)
+[else]
+        AND SCH.schoolgroup != '9'
+[/if]
+)  sumquery
+GROUP BY Grade_Level
+ORDER BY Grade_Level
+
+;alternatecolor]
+<tr class="oddrow">
+	<td>~(Grade_Level)</td>
+	<td>~(GradeCount)</td>
+</tr>
+[/tlist_sql]
+</table>
+</fieldset>
+
+
+
+</div>
+
+<table border="1" cellspacing="0" cellpadding="4" width="650">
+		<th class="bold">School Name</td>
+		<th class="DCID" style='Display:None'>DCID</td>
+		<th class="bold">Student Number</td>
+		<th class="bold">State UIC</td>
+		<th class="bold">Last Name</td>
+		<th class="bold">First Name</td>
+		<th class="bold">DOB</td>
+		<th class="bold">Gender</td>
+		<th class="bold">Grade Level</td>
+                <th class="bold">Link</td>
+	</tr>
+~[tlist_sql;
+SELECT
+  SCH.Name as SchoolName
+, STU.DCID as DCID
+, STU.Student_Number as Student_Number
+, STU.State_StudentNumber as State_StudentNumber
+, STU.Last_Name as Last_Name
+, STU.First_Name as First_Name
+, TO_CHAR(STU.dob, 'MM/DD/YYYY') as DOB
+, STU.Gender as Gender
+, STU.Grade_Level as Grade_Level
+FROM STUDENTS STU
+LEFT JOIN Schools SCH ON STU.Schoolid = SCH.School_Number
+WHERE STU.Enroll_Status = 0
+AND STU.state_studentnumber IS NULL
+~[if.is.a.school] 
+	AND	STU.Schoolid = ~(curschoolid)
+[else]
+        AND SCH.schoolgroup != '9'
+[/if]
+ORDER BY SCH.Name, STU.Last_Name, STU.First_Name
+
+;alternatecolor]
+<tr class="oddrow">
+	<td>~(SchoolName)</td>
+	<td style='Display:None'>~(DCID)</td>
+	<td>~(Student_Number)</td>
+	<td>~(State_StudentNumber)</td>
+	<td>~(Last_Name)</td>
+	<td>~(First_Name)</td>
+	<td>~(DOB)</td>
+	<td>~(Gender)</td>
+	<td>~(Grade_Level)</td>
+	<td><a href=/admin/EAA/datatools/controller/state_updateuic.html?frn=001'||to_char~(DCID)||' class="dialogM">Edit UIC</a><BR /></td>
+	</td>
+</tr>
+[/tlist_sql]
+</table>
+
+
+<br>
+<p>
+
+
+</p>
+
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- Published by Douglas S. Mott, direct inquiries to (313)405-9544 -->
