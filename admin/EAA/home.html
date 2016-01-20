@@ -65,6 +65,58 @@ table.linkDescList col:first-child {
 </script>
 
 <script type="text/javascript">
+	function saveValuesMultiB(eleFrom, eleTo)
+	{
+		var theList = "";
+
+		for (var i=0; i<eleFrom.options.length; i++)
+		{
+			if (eleFrom.options[i].selected && eleFrom.options[i].value != "")
+			{
+				theList = theList + eleFrom.options[i].value + ",";
+			}
+		}
+		eleTo.value = theList;
+	}
+
+	//Populates a list based on a hidden field
+	function loadValuesMultiB(eleFrom, eleHidden)
+	{
+				var Arr;
+				Arr = eleHidden.value.split(",");
+				
+				if(eleHidden.value != "")
+				{  
+				for (var i=0; i<eleFrom.options.length; i++)
+				{
+							for(var j=0; j<Arr.length-1; j++)
+							{
+										if(eleFrom.options[i].value == Arr[j])
+										{
+													eleFrom.options[i].selected = true;
+										}
+							}
+				}
+				}
+				else
+				{
+							for (var i=0; i<eleFrom.options.length; i++)
+							{
+								eleFrom.options[i].selected = false;
+							}
+							eleFrom.options[0].selected = true;
+				}
+	}
+	
+	function RemoveCommaB() {
+	   var CurrentList = "";
+		CurrentList = "~[displaypref:eaaCustDiscAdminGrp]";
+		CurrentList = CurrentList.replace(/,\s*$/, "");
+		document.getElementById("curlist").innerHTML = CurrentList;
+	}
+</script>
+
+<script type="text/javascript">
 
 function tml(){
 	var frm = document.getElementById('MaxLoad');
@@ -193,8 +245,16 @@ window.onload = function () {
 							<td>Daily attendance rates, by school and grade. Use this for ADA and ADM purposes.</td>
 						</tr>
 						<tr>
+							<td><a href="/admin/sqlReports4/params.html?frn=00610473&lrn=~(userfrn)" target="_blank">Attendance Rate by School, Grade, Week</a></td>
+							<td>Weekly attendance rates, by school and grade. Use this for ADA and ADM purposes.</td>
+						</tr>
+						<tr>
 							<td><a href="/admin/sqlReports4/params.html?frn=00610040&lrn=~(userfrn)" target="_blank">Attendance Rate by School, Day</a></td>
 							<td>Daily attendance rates, by school. Use this for ADA and ADM purposes.</td>
+						</tr>
+						<tr>
+							<td><a href="/admin/sqlReports4/params.html?frn=00610472&lrn=~(userfrn)" target="_blank">Attendance Rate by School, Week</a></td>
+							<td>Weekly attendance rates, by school. Use this for ADA and ADM purposes.</td>
 						</tr>
 						<tr>
 							<td><a href="/admin/sqlReports4/params.html?frn=0069388&lrn=~(userfrn)" target="_blank">Attendance Rate for District, Day</a></td>
@@ -409,8 +469,8 @@ window.onload = function () {
 							<td>Detailed list of students with missing ethnicity details.</td>
 						</tr>
 						<tr>
-							<td><a href="/admin/sqlReports4/params.html?frn=00610308&lrn=~(userfrn)" target="_blank">Student Record Maintenance (SRM) Tracker</a></td>
-							<td>Detailed list of students that will be claimed in the upcoming SRM submission. Use to ensure all information is completed for this submission.</td>
+							<td><a href="/admin/sqlReports4/params.html?frn=00610308&lrn=~(userfrn)" target="_blank">Section 25e Student List</a></td>
+							<td>Detailed list of students that will be claimed in the upcoming Section 25e submission. Use to ensure all information is completed for this submission.</td>
 						</tr>
 					</tbody>
 				</table>
@@ -555,6 +615,17 @@ window.onload = function () {
 								</td>
 							</tr>
 							<script type="text/javascript">		loadValuesMulti(document.getElementById('multi01'),document.getElementById('value01'));
+							</script>
+							<tr>
+								<td><b>Access to EAA Discipline Admin Settings</b><br>Use CTRL/OPT to make multiple selections.<br><br><b>Current Preferred Admin Groups:</b><br><div id="curlist"></div></td>
+								<td colspan="2">
+									<select name="[pref]eaaCustDiscAdminGrp" id="multi02" onChange="saveValuesMultiB(this,document.getElementById('value02'))" MULTIPLE size="10" style="width:220px">
+									~[tlist_sql;select '<option value="'||id||'">'||name from gen where upper(cat)='GROUPS' order by id]~(SelectOpt;t)[/tlist_sql]
+									</select>
+									<input type="hidden" name="[pref]eaaCustDiscAdminGrp" value="" id="value02">
+								</td>
+							</tr>
+							<script type="text/javascript">		loadValuesMultiB(document.getElementById('multi02'),document.getElementById('value02'));
 							</script>
 						</tbody>
 					</table>
